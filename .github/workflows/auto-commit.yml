@@ -1,0 +1,31 @@
+name: Auto Commit Multiple Times
+
+on:
+  schedule:
+    - cron: '0 17 * * *'   # 00:00 VN
+    - cron: '0 21 * * *'   # 04:00 VN
+    - cron: '0 1 * * *'   # 08:00 VN
+    - cron: '0 5 * * *'   # 12:00 VN
+    - cron: '0 9 * * *'   # 16:00 VN
+    - cron: '0 13 * * *'  # 20:00 VN
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Auto Commit
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "🕒 $(date)" >> last-commit.txt
+          git add .
+          git commit -m "✅ Auto commit at $(date)" || echo "Nothing to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
