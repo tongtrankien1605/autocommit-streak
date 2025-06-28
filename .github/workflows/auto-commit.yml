@@ -27,8 +27,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          TIME=$(date +"%d-%m-%Y %H:%M")
-          echo "🕒 $TIME by Tống Trần Kiên" >> last-commit.txt
+          TIME=$(date +"%d-%m-%Y %H:%M:%S")
+          echo "🕒 $TIME by Tống Trần Kiên" > temp.txt
+          if [ -f last-commit.txt ]; then
+            cat last-commit.txt >> temp.txt
+          fi
+          mv temp.txt last-commit.txt
 
           git add .
           git commit -m "✅ Auto commit at $TIME by Tống Trần Kiên" || echo "Nothing to commit"
